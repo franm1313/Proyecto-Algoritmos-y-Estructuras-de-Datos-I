@@ -170,11 +170,10 @@ def sumarMatrz(m,cf):
         resu+=sum(m[f])   #Usando funcion de listas
     return resu
             
-def buscarElem(listaLegajos,legajo):
-    for i in range(len(listaLegajos)):
-        if listaLegajos[i] == 
-
-return in Trui
+def buscarElem(lista,elem):
+    for i in range(len(lista)):
+        if lista[i] == elem:
+            return i
     return -1
 
 def elementoExistente(lista,elem):
@@ -197,7 +196,7 @@ def cargarAlumnos(legajos,nomAlumnos):
     print("Carga de alumnos (legajo 0 para terminar)")
     seguir=True
     while seguir:
-        legajo= input("Ingresar el legajo del alumno:")
+        legajo = int(input("Ingresar el legajo del alumno:"))
         if legajo == 0:
             seguir=False
         else:
@@ -236,30 +235,34 @@ print(materias)
 
 
 #opc4 (actualizarNota):
-def actualizarNota():
-    print("Actualización de notas(legajo 0 para terminar)")
+def actualizarNota(matriz, legajos, materias):
+    print("Actualización de notas (legajo 0 para terminar)")
     seguir = True
     while seguir:
         legajo = ingresaMayora(0,"Legajo del alumno")
-        posAlumno=buscarElem(legajos,legajo)
         if legajo == 0:
-            seguir=False
+            seguir = False
         else:
-            while(posAlumno==-1):
-                print("Re ingresar legajo del alumno. No se encontró en el registro de alumnos")
-                legajo = ingresaMayora(0,"Legajo del alumno")
-                posAlumno=buscarElem(legajos,legajo)
-            materia= input(("Ingresar el nombre de la materia"))
-            posMateria=buscarElem(materias,materia)
-            while(posMateria== -1):
-                print("Materia no encontrada. Ingrese nuevamente el nombre ")
-                materia= input(("Ingresar el nombre de la materia"))
-                posMateria=buscarElem(materias,materia)
-            nota= ingresaMayora(0,"Nueva nota del alumno(1-10)")
-            while nota >10:
-                print("Ingresar correctamente la materia")
-                nota= ingresaMayora(0,"Nueva nota del alumno(1-10)")
+            posAlumno = buscarElem(legajos, legajo)
+            while(posAlumno == -1):
+                print("Legajo no encontrado en el registro de alumnos")
+                legajo = ingresaMayora(0,"Ingrese otro legajo")
+                posAlumno = buscarElem(legajos, legajo)
+            
+            materia = input("Ingresar el nombre de la materia: ")
+            posMateria = buscarElem(materias, materia)
+            while(posMateria == -1):
+                print("Materia no encontrada")
+                materia = input("Ingrese nuevamente el nombre de la materia: ")
+                posMateria = buscarElem(materias, materia)
+            
+            nota = ingresaMayora(0,"Nueva nota del alumno (1-10)")
+            while nota < 1 or nota > 10:
+                print("La nota debe estar entre 1 y 10")
+                nota = ingresaMayora(0,"Ingrese la nota nuevamente (1-10)")
+            
             matriz[posAlumno][posMateria] = nota
+            print("Nota actualizada correctamente")
 
 #opc 5
 def mostrarTabla(matriz, materias, legajos):
