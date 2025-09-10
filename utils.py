@@ -1,17 +1,16 @@
 import random
 
+def crearVectores():
+    materias = ["Matematica", "Fisica", "Quimica", "Historia", "Lengua"]
+    legajos = [random.randint(10000,99999) for _ in range(5)]
+    nomAlumnos = ["Juan Diaz","Ezequiel Senini","Juan Echarri","Francisco Gonzalez","Luca"]
+    print(legajos)
+    return materias, legajos, nomAlumnos
 
-#Funcion para crear  los vectores
-def crear_vectores():
-    materias = ["matematica", "fisica", "quimica", "historia", "lengua"]
-    legajos = [random.randint(10000,99999) for _ in range(30)]
-    return materias, legajos
 
-
-#Funcion para crear una matriz inicializada en 0
-def matriz_en_cero():
-    filas = 30
-    columnas = 5
+def matrizEnCero(legajos,materias):
+    filas = len(legajos)
+    columnas = len(materias)
     matriz = []
     for f in range(filas):
         matriz.append([0]*columnas)
@@ -19,95 +18,383 @@ def matriz_en_cero():
         print(fila)
     return matriz
 
-#Funcion para crear una matriz inicializada con valores aleatorios
-def matriz_aleatoria():
-    filas = 30
-    columnas = 5
+
+def matrizAleatoria(legajos, materias):
+    filas = len(legajos)
+    columnas = len(materias)
     matriz = []
     for f in range(filas):
         fila = [random.randint(1, 10) for _ in range(columnas)]
-        matriz.append(fila)
-        
+        matriz.append(fila)    
     for fila in matriz:
         print(fila)
     return matriz
 
-#Opc 6
-def ordenar_informacion(matriz, materias, legajos):
 
-    def ordenar_por_promedio():
-        alumnos = []
-        for i in range(len(matriz)):
-            promedio = sum(matriz[i]) / len(matriz[i])
-            alumnos.append((promedio, legajos[i], matriz[i]))
-
-        alumnos.sort(reverse=True)
-
-        print("\nAlumnos ordenados por promedio (mayor a menor): ")
-        for promedio, legajo, notas in alumnos:
-            print(f"Legajo: {legajo} | Promedio: {promedio:.2f} | Notas: {notas}")
-
-    def filtrar_por_materia(indice_materia):
-        if 0 <= indice_materia < len(materias):
-            print(f"\nNotas de la materia '{materias[indice_materia]}':")
-            for i in range(len(matriz)):
-                print(f"Legajo: {legajos[i]} | Nota: {matriz[i][indice_materia]}")
-        else:
-            print("Índice de materia inválido")
-
-    def ordenar_por_legajo():
-        alumnos = []
-        for i in range(len(matriz)):
-            alumnos.append((legajos[i], matriz[i]))
-
-        alumnos.sort(reverse=True)
-
-        print("\nAlumnos ordenados por legajo (mayor a menor): ")
-        for legajo, notas in alumnos:
-            print(f"Legajo: {legajo} | Notas: {notas}")
-
-    # Submenú de ordenamientos
-    print("""
-    1 - Ordenar por promedio
-    2 - Filtrar por materia
-    3 - Ordenar por legajo
-    """)
+def ingresaMayora(valor,texto):
+    resu=float(input(texto))
+    while resu < valor:
+        print("Error. Re ingrese")
+        resu=float(input(texto))
+    return resu
 
 
-    opcion = int(input("Ingrese una opción: "))
+def inicializarMatriz(m,cf,cc,valor):
+    for f in range(cf):
+        m.append([])
+        for c in range(cc):
+            m[f].append(valor)
 
-    if opcion == 1:
-        ordenar_por_promedio()
-    elif opcion == 2:
-        indice = int(input(f"Ingrese el índice de la materia (0 a {len(materias)-1}): "))
-        filtrar_por_materia(indice)
-    elif opcion == 3:
-        ordenar_por_legajo()
+            
+def sumarMatrz(m,cf):
+    resu=0
+    for f in range(cf):
+        resu+=sum(m[f])
+    return resu
+
+
+def buscarElem(lista,elem):
+    if elem in lista:
+        return lista.index(elem)
     else:
-        print("Opción inválida.")
+        return -1
 
 
-def opc1():
-    print("soy la funcion numero 1")
+def elementoExistente(lista,elem):
+    if elem in lista:
+        return True
+    else:
+        return False
 
-def opc2():
-    print("soy la funcion numero 2")
 
-def opc3():
-    print("soy la funcion numero 3")
+def sumaMatrizxFila(m,lista,cf):
+    for f in range(cf):
+        lista[f]= sum(m[f])
 
-def opc4():
-    print("soy la funcion numero 4")
 
-def opc5():
-    print("soy la funcion numero 5")
+def sumaMatrizxColumna(m,lista,cf,cc):
+    for j in range(cc):
+        for i in range(cf):
+            lista[j]+=m[cf][cc]
 
+
+def validacionLegajos(legajos, legajo):
+     while not (legajo.isdigit() and len(legajo) == 7 and not elementoExistente(legajos, int(legajo))):
+        print("Error en ingreso de legajo. Asegurarse de que sean numeros, y que este en el formato correcto(7 digitos)")
+        legajo=input("Ingresar legajo del alumno: ")
+        leg = int(legajo)
+        if leg == 0:
+            seguir = False 
+            menu()
+        
+
+def cargarAlumnos(legajos, nomAlumnos):
+    print("Carga de alumnos (legajo 0 para terminar)")
+    seguir = True
+    while seguir:
+        legajo = input("Ingresar el legajo del alumno: ")
+        leg= int(legajo)
+        if leg == 0:
+            seguir = False
+            menu()
+        else:
+            validacionLegajos(legajos,legajo)
+            leg = int(legajo)
+            
+            if leg!=0:
+                nombre=input("Ingresar nombre del alumno: ").title()
+                while (nombre.isdigit() or nombre == "" ):
+                    if nombre.isdigit():
+                        print("Error! Se detecto solamente numeros.")
+                    else:
+                        print("Error. Re-ingrese el nombre del alumno")
+                    nombre=input("Ingrese el nombre del alumno: ").title()
+                legajos.append(legajo)
+                nomAlumnos.append(nombre)
+        
+
+def cargarMateria(materias):
+    print("Carga de materias (Ingrese 0 para terminar)")
+    seguir = True
+    while seguir:
+        materia=input("Ingrese el nombre de la materia: ").title()
+
+        if materia == "0":
+            seguir = False
+            menu()
+        else:
+            if elementoExistente(materias, materia):
+                print("Esta materia ya ha sido cargada anteriormente")
+            while materia.isdigit():
+                print("Error! Se detecto solamente numeros.")
+                materia=input("Ingrese el nombre de la materia: ").title()
+            if not elementoExistente(materias,materia):
+                materias.append(materia)
+                print(f"Materia cargada con exito!, {materias}")
+
+
+def cargarNota(matriz, legajos, materias):
+    print("Carga de notas a traves del Legajo (Ingrese legajo 0 para terminar)")
+    seguir = True
+    while seguir:
+        legajo = int(input("Ingrese numero de Legajo del alumno:\n"))
+        if legajo == 0:
+            seguir= False
+            menu()
+            
+        posLegajo = buscarElem(legajos, legajo)
+        while posLegajo == -1:
+            print("Legajo ingresado no encontrado")
+            legajo = int(input("Ingrese numero de Legajo del alumno (0 para terminar):\n"))
+            if legajo == 0:
+                return
+            posLegajo = buscarElem(legajos, legajo)
+            
+        print("\nLista de Materias:")
+        for i in range(len(materias)):
+            print(f"{i+1}. {materias[i]}")
+        materia = int(input("\nSeleccione materia a la cual cargar la nota:\n"))
+        while materia > len(materias) or materia < 1:
+            materia = int(input("Valor ingresado incorrecto\nIntente nuevamente:\n"))
+            
+        nota = int(input("Ingrese nota:\n"))
+        while nota > 10 or nota < 1:
+            nota = int(input("Valor ingresado incorrecto\nIntente nuevamente:\n"))
+            
+        matriz[posLegajo][materia-1] = nota
+        print("Nota cargada exitosamente\n")
+
+
+def actualizarNota(matriz, legajos, materias):
+    print("Actualizacion de notas (legajo 0 para terminar)")
+    seguir = True
+    while seguir:
+        legajo = int(input("Ingresar el legajo del alumno: "))
+        
+        if legajo == 0:
+            seguir = False
+            return
+
+        posAlumno = buscarElem(legajos, legajo)
+        while posAlumno == -1:
+            print("Legajo no encontrado en el registro de alumnos")
+            legajo = int(input("Ingrese otro legajo (0 para terminar): "))
+            if legajo == 0:
+                seguir = False
+                return
+            posAlumno = buscarElem(legajos, legajo)
+        
+        if seguir:
+            print("\nMaterias disponibles:")
+            for i in range(len(materias)):
+                print(f"{i+1}. {materias[i]}")
+                
+            num_materia = int(input("Seleccione el numero de materia: "))
+            while num_materia < 1 or num_materia > len(materias):
+                print("Numero de materia invalido")
+                num_materia = int(input("Seleccione el numero de materia: "))
+            
+            posMateria = num_materia - 1
+            
+            nota_actual = matriz[posAlumno][posMateria]
+            print(f"Nota actual en {materias[posMateria]}: {nota_actual}")
+            
+            nota = int(input("Nueva nota del alumno (1-10): "))
+            while nota < 1 or nota > 10:
+                print("La nota debe estar entre 1 y 10")
+                nota = int(input("Ingrese la nota nuevamente (1-10): "))
+            
+            matriz[posAlumno][posMateria] = nota
+            print(f"Nota actualizada correctamente: {materias[posMateria]} = {nota}")
+            print("-" * 50)
+
+
+def mostrarTabla(matriz, materias, legajos):
+    print("TABLA DE ALUMNOS")
+    encabezado ="Legajo\t"
+    for materia in materias:
+        encabezado += materia + "\t"
+    print(encabezado) 
+    for i in range(len(legajos)):
+        fila = str(legajos[i]) + "\t"
+        for nota in matriz[i]:
+            fila += str(nota) + "\t"
+        print(fila)
+
+
+def buscarAlumno(matriz, materias, legajos):
+    legajo_buscar = int(input("Ingrese el legajo a buscar: "))
+    encabezado = ""
+    for materia in materias:
+        encabezado += materia + "\t"
+
+    for i in range(len(legajos)):
+        if legajos[i] == legajo_buscar:
+            fila = str(legajos[i]) + "\t"
+            for nota in matriz[i]:
+                fila += str(nota) + "\t"
+            print(encabezado)
+            print(fila)
+        else:
+            print("Legajo no encontrado")
+
+
+def ordenarInformacion(matriz, materias, legajos):
+    print("Ordenar informacion (0 para volver al menu)")
+    seguir = True
+    while seguir: 
+        print("""
+        1 - Ordenar por promedio
+        2 - Filtrar por materia
+        3 - Ordenar por legajo
+        0 - Volver al menu principal
+        """)
+
+        opcion = int(input("Ingrese una opcion: "))
+
+        if opcion == 0:
+            seguir = False
+            return
+        elif opcion == 1:
+            hay_notas = False
+            for i in range(len(matriz)):
+                if any(nota != 0 for nota in matriz[i]):
+                    hay_notas = True
+                    
+            if not hay_notas:
+                print("No hay notas cargadas para mostrar promedios")
+                continue
+                
+            alumnos = []
+            for i in range(len(matriz)):
+                notas_validas = [nota for nota in matriz[i] if nota != 0]
+                if notas_validas:
+                    promedio = sum(notas_validas) / len(notas_validas)
+                else:
+                    promedio = 0
+                alumnos.append((promedio, legajos[i], matriz[i]))
+
+            alumnos.sort(reverse=True)
+
+            print("\nAlumnos ordenados por promedio (mayor a menor): ")
+            for promedio, legajo, notas in alumnos:
+                print(f"Legajo: {legajo} | Promedio: {promedio:.2f} | Notas: {notas}")
+                
+        elif opcion == 2:
+            print("\nMaterias disponibles:")
+            for i in range(len(materias)):
+                print(f"{i+1}. {materias[i]}")
+            
+            num_materia = int(input(f"Seleccione el numero de materia (1 a {len(materias)}): "))
+            while num_materia < 1 or num_materia > len(materias):
+                print("Numero de materia invalido")
+                num_materia = int(input(f"Seleccione el numero de materia (1 a {len(materias)}): "))
+            
+            indice_materia = num_materia - 1
+            print(f"\nNotas de la materia '{materias[indice_materia]}':")
+            
+            alumnos_materia = []
+            for i in range(len(matriz)):
+                alumnos_materia.append((matriz[i][indice_materia], legajos[i]))
+            alumnos_materia.sort(reverse=True)
+            
+            for nota, legajo in alumnos_materia:
+                if nota != 0:
+                    print(f"Legajo: {legajo} | Nota: {nota}")
+                else:
+                    print(f"Legajo: {legajo} | Sin nota")
+                    
+        elif opcion == 3:
+            alumnos = []
+            for i in range(len(matriz)):
+                alumnos.append((legajos[i], matriz[i]))
+
+            alumnos.sort(reverse=True)
+
+            print("\nAlumnos ordenados por legajo (mayor a menor): ")
+            for legajo, notas in alumnos:
+                print(f"Legajo: {legajo} | Notas: {notas}")
+        else:
+            print("Opcion invalida. Intente nuevamente.")
+        
+        print("-" * 50)
+
+
+def mostrarEstadisticas(matriz, materias, legajos):
+    
+    opcion = input()
+    if opcion == "0":
+        return
+    
+    hay_notas = False
+    for i in range(len(matriz)):
+        for j in range(len(materias)):
+            if matriz[i][j] != 0:
+                hay_notas = True
+    
+    if not hay_notas:
+        print("No hay notas cargadas en el sistema para mostrar estadisticas.")
+        return
+    
+    print("\n PROMEDIO POR MATERIA")
+    for j in range(len(materias)):
+        notas = []
+        for i in range(len(legajos)):
+            if matriz[i][j] != 0:
+                notas.append(matriz[i][j])
+        
+        if notas:
+            promedio = sum(notas) / len(notas)
+            print(f"{materias[j]}: {promedio:.2f} (basado en {len(notas)} notas")
+        else:
+            print(f"{materias[j]}: Sin notas cargadas")
+    
+    print(f"\n PROMEDIO GENERAL")
+    todas_las_notas = []
+    for i in range(len(legajos)):
+        for j in range(len(materias)):
+            if matriz[i][j] != 0:
+                todas_las_notas.append(matriz[i][j])
+    
+    if todas_las_notas:
+        promedio_general = sum(todas_las_notas) / len(todas_las_notas)
+        print(f"Promedio general: {promedio_general:.2f}")
+        print(f"Total de notas: {len(todas_las_notas)}")
+    else:
+        print("No hay notas cargadas")
+
+    print("\n--- PROMEDIO POR ALUMNO")
+    for i in range(len(legajos)):
+        notas = []
+        for j in range(len(materias)):
+            if matriz[i][j] != 0:
+                notas.append(matriz[i][j])
+        
+        if notas:
+            promedio_alumno = sum(notas) / len(notas)
+            print(f"Legajo {legajos[i]} Promedio: {promedio_alumno:.2f} ({len(notas)} notas cargadas)")
+        else:
+            print(f"Legajo {legajos[i]}  Sin notas cargadas")
+    
+    print("\n ESTADISTICAS ADICIONALES")
+    if todas_las_notas:
+        nota_maxima = max(todas_las_notas)
+        nota_minima = min(todas_las_notas)
+        print(f"Nota mas alta: {nota_maxima}")
+        print(f"Nota mas baja: {nota_minima}")
+        
+        aprobados = len([nota for nota in todas_las_notas if nota >= 4])
+        desaprobados = len([nota for nota in todas_las_notas if nota < 4])
+        print(f"Notas aprobadas: {aprobados}")
+        print(f"Notas desaprobadas: {desaprobados}")
+        menu()
 
 """
     FUNCION DEL MENU DEL PROGRAMA
 """
 def menu():
-    materias, legajos = crear_vectores()
+    materias, legajos, nomAlumnos = crearVectores()
+    matriz = matrizAleatoria(legajos, materias)
     
     print("""███╗░░██╗░█████╗░████████╗███████╗░██████╗██████╗░██╗░░░██╗
 ████╗░██║██╔══██╗╚══██╔══╝██╔════╝██╔════╝██╔══██╗╚██╗░██╔╝
@@ -131,160 +418,27 @@ OPCION 7: Buscar alumno por legajo.
 OPCION 8: Mostrar Estadisticas.
 OPCION 9: Salir del programa.""")
     opc = -1
-    while (opc != 0):
+    while (opc != 9):
         
 
         opc = int(input("Ingrese una opcion: "))
 
-        if (opc < 0 or opc > 5):
+        if (opc < 0 or opc > 9):
             opc = int(input("Ingrese una opcion valida: "))
 
         if (opc == 1):
-            opc1()
+            cargarAlumnos(nomAlumnos,legajos)
         elif(opc ==2):
-            opc2()
+            cargarMateria(materias)
         elif(opc ==3):
-            opc3()
+            cargarNota(matriz, legajos, materias)
         elif(opc ==4):
-            opc4()
+            actualizarNota(matriz,legajos,materias)
         elif(opc ==5):
-            opc5()
+            mostrarTabla(matriz,materias,legajos)
         elif(opc ==6):
-            ordenar_informacion()
-def ingresaMayora(valor,texto):
-    resu=float(input(texto))
-    while resu < valor:
-        print("Error. Re ingrese")
-        resu=float(input(texto))
-    return resu
-
-def inicializarMatriz(m,cf,cc,valor):
-    for f in range(cf):
-        m.append([])
-        for c in range(cc):
-            m[f].append(valor)
-            
-def sumarMatrz(m,cf):
-    resu=0
-    for f in range(cf):
-        resu+=sum(m[f])   #Usando funcion de listas
-    return resu
-            
-def buscarElem(lista,elem):
-    for i in range(len(lista)):
-        if lista[i] == elem:
-            return i
-    return -1
-
-def elementoExistente(lista,elem):
-    for i in range (len(lista)):
-        if lista[i]== elem:
-            return True
-    return False
-
-def sumaMatrizxFila(m,lista,cf):
-    for f in range(cf):
-        lista[f]= sum(m[f])
-
-def sumaMatrizxColumna(m,lista,cf,cc):
-    for j in range(cc):
-        for i in range(cf):
-            lista[j]+=m[f][c]
-
-#opc 1
-def cargarAlumnos(legajos,nomAlumnos):
-    print("Carga de alumnos (legajo 0 para terminar)")
-    seguir=True
-    while seguir:
-        legajo = int(input("Ingresar el legajo del alumno:"))
-        if legajo == 0:
-            seguir=False
-        else:
-            if(elementoExistente(legajos,legajo)):
-                print("Legajo existente. Re-ingrese el legajo del alumno")
-        nombre=input("Ingresar el nombre del alumno")
-        if nombre == "":
-            print("Error. Re-ingresar el nombre del alumno")
-        legajos.append(legajo)
-        nomAlumnos.append(nombre)
-        print("Alumno cargado correctamente")
-#opc 2
-
-def cargarMateria():
-    print("Carga de materias (Ingrese 0 para terminar)")
-    materia=input("Ingrese el nombre de la materia: ").title()
-    while materia != "0":
-
-        while materia.isdigit():
-            print("Error! Se detecto solamente numeros.")
-            materia=input("Ingrese el nombre de la materia: ").title()
-        
-        if materia in materias:
-            print("Esta materia ya ha sido cargada anteriormente")
-        else:
-            materias.append(materia)
-            print("Materia cargada con exito!")
-        
-        materia=input("Ingrese el nombre de la materia: ").title()
-
-    if materia == "0":
-        menu()
-
-cargarMateria()
-print(materias)
-
-
-#opc4 (actualizarNota):
-def actualizarNota(matriz, legajos, materias):
-    print("Actualización de notas (legajo 0 para terminar)")
-    seguir = True
-    while seguir:
-        legajo = ingresaMayora(0,"Legajo del alumno")
-        if legajo == 0:
-            seguir = False
-        else:
-            posAlumno = buscarElem(legajos, legajo)
-            while(posAlumno == -1):
-                print("Legajo no encontrado en el registro de alumnos")
-                legajo = ingresaMayora(0,"Ingrese otro legajo")
-                posAlumno = buscarElem(legajos, legajo)
-            
-            materia = input("Ingresar el nombre de la materia: ")
-            posMateria = buscarElem(materias, materia)
-            while(posMateria == -1):
-                print("Materia no encontrada")
-                materia = input("Ingrese nuevamente el nombre de la materia: ")
-                posMateria = buscarElem(materias, materia)
-            
-            nota = ingresaMayora(0,"Nueva nota del alumno (1-10)")
-            while nota < 1 or nota > 10:
-                print("La nota debe estar entre 1 y 10")
-                nota = ingresaMayora(0,"Ingrese la nota nuevamente (1-10)")
-            
-            matriz[posAlumno][posMateria] = nota
-            print("Nota actualizada correctamente")
-
-#opc 5
-def mostrarTabla(matriz, materias, legajos):
-    print("=== TABLA DE ALUMNOS ===")
-    encabezado ="Legajo\t"
-    for materia in materias:
-        encabezado += materia + "\t"    #Vector de materias
-    print(encabezado) 
-    for i in range(len(legajos)):
-        fila = str(legajos[i]) + "\t"
-        for nota in matriz[i]:
-            fila += str(nota) + "\t"
-        print(fila)
-
-#opc 7
-def buscarAlumno(matriz, materias, legajos):
-    legajo_buscar = int(input("Ingrese el legajo a buscar: "))
-    for materia in materias:
-        encabezado += materia + "\t"    #Vector de materias
-    print(encabezado) 
-    for i in range(len(legajos)):
-        fila = str(legajos[i]) + "\t"
-        for nota in matriz[i]:
-            fila += str(nota) + "\t"
-        print(fila)
+            ordenarInformacion(matriz,materias,legajos)
+        elif(opc == 7):
+            buscarAlumno(matriz,materias,legajos)
+        elif(opc == 8):
+            mostrarEstadisticas(matriz,materias,legajos)
